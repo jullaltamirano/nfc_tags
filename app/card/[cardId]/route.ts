@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
 export async function GET(
   request: Request,
@@ -12,7 +13,7 @@ export async function GET(
   // 1. Buscar la tarjeta
   const { data: card, error: cardError } = await supabase
     .from("nfc")
-    .select("id, location_id, redirect_url, is_active, employee_id")
+    .select("id, code, location_id, redirect_url, is_active, employee_id")
     .eq("code", cardId)
     .single();
 
@@ -31,12 +32,12 @@ export async function GET(
   }
 
   // 4. Registrar el scan
-  const { error: scanError } = await supabase
+  const { error: scanError } = await supabaseAdmin
     .from("nfc_scans")
     .insert({
       nfc_id: card.id,
       location_id: card.location_id,
-      emplyee_id: card.employee_id,
+      employee_id: card.employee_id,
     });
 
   if (scanError) {
