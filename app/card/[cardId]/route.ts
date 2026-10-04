@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
-import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
 export async function GET(
   request: Request,
@@ -13,7 +12,7 @@ export async function GET(
   // 1. Buscar la tarjeta
   const { data: card, error: cardError } = await supabase
     .from("nfc")
-    .select("id, code, location_id, redirect_url, is_active, employee_id")
+    .select("id, code, location_id, redirect_url, is_active, is_configured, employee_id")
     .eq("code", cardId)
     .single();
 
@@ -31,8 +30,16 @@ export async function GET(
     });
   }
 
+  // 4. Si la tarjeta todavía no está configurada,
+  // redirigir al setup antes de registrar el scan
+  if (!card.is_configured) {
+    const setupUrl = new URL(`/setup/${cardId}`, request.url);
+
+    return NextResponse.redirect(setupUrl);
+  }
+
   // 4. Registrar el scan
-  const { error: scanError } = await supabaseAdmin
+  const { error: scanError } = await supabase
     .from("nfc_scans")
     .insert({
       nfc_id: card.id,

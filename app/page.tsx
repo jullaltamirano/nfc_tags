@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ArrowRight, Check, ChevronRight, CircleCheck, MessageCircle, QrCode as QrCodeIcon, ScanLine, Wifi } from "lucide-react";
+import Image from "next/image";
 
 const products = [
   {
@@ -54,20 +55,14 @@ const ProductVisual = ({ accent, small = false }: { accent: string; small?: bool
           : "Vista de acrílico para counter"
       }
     >
-      <div className="absolute inset-0 rotate-12 scale-125 opacity-15 [background-image:linear-gradient(#fff_1px,transparent_1px),linear-gradient(90deg,#fff_1px,transparent_1px)] [background-size:24px_24px]" />
-      <div className={`z-[1] flex ${small ? "h-[230px] w-[170px] p-4" : "h-[355px] w-[225px] p-5"} rotate-[-8deg] flex-col justify-between rounded-[13px] bg-[#f9faf9] text-[#10263f] shadow-[0_15px_35px_rgba(0,0,0,.13)]`}>
-        <div className="flex items-center gap-1.5 text-[10px] font-extrabold tracking-[-.05em]">
-          <BrandMark />
-          <span>reviewlink</span>
-        </div>
-        <div className={`${small ? "text-xl" : "text-[27px]"} leading-[.98] tracking-[-.08em]`}>
-          Haz que tu<br /><strong className="text-[#87929a]">opinión cuente.</strong>
-        </div>
-        <div className="flex items-center gap-2 text-[7px] leading-tight text-[#6c7881]">
-          <QrCodeIcon className="size-9 text-[#10263f]" />
-          <span>Acerca tu celular<br />y déjanos 5 estrellas</span>
-        </div>
-      </div>
+      <div className="absolute inset-0 rotate-12 scale-125 opacity-15" />
+      <Image
+        src={accent.includes("10263f") ? "/nfc-card.png" : "/acrylic.png"}
+        alt={accent.includes("10263f") ? "Vista de tarjeta NFC" : "Vista de acrílico para counter"}
+        width={small ? 200 : 350}
+        height={small ? 200 : 350}
+        className={`relative z-[1] ${small ? "h-[200px]" : "h-[300px]"} w-auto rounded-2xl`}
+      />
       <div className="absolute bottom-7 right-[28%] z-[2] grid size-10 place-items-center rounded-full bg-[#c9d8e0] text-[#10263f]">
         <Wifi className="size-5" />
       </div>
@@ -124,14 +119,16 @@ export default function Page() {
         </div>
         <div className="relative mx-auto w-full max-w-[500px]">
           <ProductVisual accent="bg-[#10263f]" />
-          <div className="absolute right-0 top-14 rounded-[10px] border border-[#e8ecee] bg-white px-4 py-3 shadow-xl">
+          {/* Review Badge */}
+          <div className="absolute right-2 top-14 rounded-[10px] border border-[#e8ecee] bg-white px-4 py-3 shadow-xl z-20">
             <div className="text-[11px] tracking-[2px] text-[#e2a52e]">
               ★★★★★
             </div>
             <strong className="text-lg">5.0</strong>
             <span className="ml-2 text-[10px] text-[#89939b]">Google Reviews</span>
           </div>
-          <div className="absolute bottom-16 left-0 flex items-center gap-2 rounded-[10px] border border-[#e8ecee] bg-white px-4 py-3 text-xs shadow-xl">
+          {/* Scan Instruction */}
+          <div className="absolute bottom-16 left-2 flex items-center gap-2 rounded-[10px] border border-[#e8ecee] z-20 bg-white px-4 py-3 text-xs shadow-xl">
             <ScanLine className="size-4 text-[#3b829f]" />
             Acerca tu celular
           </div>
